@@ -12,12 +12,12 @@ class Chisel
     chunks_to_string(html_chunks)
   end
 
-  def chunks_to_string(html_chunks)
-    html_chunks.join("\n\n") << "\n"
-  end
-
   def string_to_chunks(string)
     string.split(/\n\n+/)
+  end
+
+  def chunks_to_string(html_chunks)
+    html_chunks.join("\n\n") << "\n"
   end
 
   def chunk_to_html(markdown_chunk)
