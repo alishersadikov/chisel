@@ -18,19 +18,25 @@ class Chisel
 
   def string_to_chunks(string)
     string.split(/\n\n+/)
-    #binding.pry
   end
 
   def chunk_to_html(markdown_chunk)
     return header_to_html(markdown_chunk) if header?(markdown_chunk)
-    #return quote_to_html if quote?(markdown_chunk)
-    #return list_to_html if list?(markdown_chunk)
+    return un_list_to_html(markdown_chunk) if unordered_list?(markdown_chunk)
+    return or_list_to_html(markdown_chunk) if ordered_list?(markdown_chunk)
     return paragraph_to_html(markdown_chunk)
-
   end
 
   def header?(chunk)
     chunk[0] == '#'
+  end
+
+  def unordered_list?(chunk)
+    chunk[0..1] == "* "
+  end
+
+  def ordered_list?(chunk)
+    chunk[0..1] == "1."
   end
 
   def header_to_html(markdown_chunk)
@@ -43,12 +49,28 @@ class Chisel
     "<h#{level}>#{header_text}</h#{level}>"
   end
 
+  def un_list_to_html(markdown_chunk)
+    markdown_lines = markdown_chunk.split("\n")
+    html_lines = markdown_lines.map do |line|
+      "\t<li>#{line[2..-1]}</li>\n"
+    end
+    "<ul>\n#{html_lines.join}</ul>"
+  end
+
+  def or_list_to_html(markdown_chunk)
+    markdown_lines = markdown_chunk.split("\n")
+    html_lines = markdown_lines.map do |line|
+      "\t<li>#{line[2..-1]}</li>\n"
+    end
+    "<ol>\n#{html_lines.join}</ol>"
+  end
+
   def paragraph_to_html(markdown_chunk)
     "<p>\n#{indent(text_to_html(markdown_chunk))}</p>"
   end
 
   def indent(string)
-    string.lines.map { |line| "  #{line.chomp}\n"}.join
+    string.lines .map { |line| "  #{line.chomp}\n"}.join
   end
 
   def text_to_html(text)
@@ -56,8 +78,6 @@ class Chisel
     .gsub("*").with_index { |dont_care, index| "<#{'/' if index.odd?}em>"}
     .gsub("&", "&amp;")
   end
-
-  im_running_the_program = ($PROGRAM_NAME == __FILE__)
 
   if $PROGRAM_NAME == __FILE__
       markdown_file = ARGV[0]
@@ -70,7 +90,6 @@ class Chisel
 
       puts "Converted #{markdown_file} (#{markdown.lines.count} lines) to #{html_file} (#{html.lines.count} lines)"
   end
-
 end
 # require_relative 'converter'
 # class Chisel

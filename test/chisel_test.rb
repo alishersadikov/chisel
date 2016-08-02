@@ -3,29 +3,6 @@ require 'minitest/pride'
 require './lib/chisel'
 
 class ChiselTest < Minitest::Test
-  def test_it_converts_markdown_to_html
-    skip
-    markdown =
-    '# My Life in Desserts
-
-    ## Chapter 1: The Beginning
-
-    "You just *have* to try the cheesecake," he said. "Ever since it appeared in
-    **Food & Wine** this place has been packed every night."'
-
-    expected_html =
-    '<h1>My Life in Desserts</h1>
-
-    <h2>Chapter 1: The Beginning</h2>
-
-    <p>
-      "You just <em>have</em> to try the cheesecake," he said. "Ever since it appeared in
-      <strong>Food &amp; Wine</strong> this place has been packed every night."
-    </p>'
-    actual_html = Chisel.new(markdown).to_html
-    assert_equal expected_html, actual_html
-  end
-
   def string_to_chunks(string)
     Chisel.new("").string_to_chunks(string)
   end
@@ -33,7 +10,6 @@ class ChiselTest < Minitest::Test
   def chunk_to_html(chunk)
     Chisel.new("").chunk_to_html(chunk)
   end
-
 
   def test_it_considers_blank_lines_to_delimit_chunks
     assert_equal ["a\nb", "c", "d"],
@@ -51,7 +27,38 @@ class ChiselTest < Minitest::Test
     assert_equal "<h6>a</h6>", chunk_to_html("###### a")
   end
 
-  def test_it_converts_every_kind_of_chunk_into_characters
+  def test_it_converts_every_other_kind_of_chunk_into_characters
     assert_equal "<p>\n  line 1\n  line 2\n</p>", chunk_to_html("line 1\nline 2")
+  end
+
+  def test_it_converts_em_tags
+    expected = "My <em>emphasized text</em> is awesome"
+    actual = Chisel.new("").text_to_html("My *emphasized text* is awesome")
+    assert_equal expected, actual
+  end
+  #My *emphasized and **stronged** text* is awesome.
+
+  def test_it_converts_strong_tags
+    expected = "My <strong>stronged text</strong> is awesome"
+    actual = Chisel.new("").text_to_html("My **stronged text** is awesome")
+    assert_equal expected, actual
+  end
+
+  def test_it_converts_both_em_and_strong_tages
+    expected = "My <em>emphasized and <strong>stronged</strong> text</em> is awesome"
+    actual = Chisel.new("").text_to_html("My *emphasized and **stronged** text* is awesome")
+    assert_equal expected, actual
+  end
+
+  def test_it_converts_unordered_lists
+    expected = "<ul>\n\t<li>Sushi</li>\n\t<li>Barbeque</li>\n\t<li>Mexican</li>\n</ul>"
+    actual = Chisel.new("").un_list_to_html("* Sushi\n* Barbeque\n* Mexican")
+    assert_equal expected, actual
+  end
+
+  def test_it_converts_ordered_lists
+    expected = "<ol>\n\t<li>Sushi</li>\n\t<li>Barbeque</li>\n\t<li>Mexican</li>\n</ol>"
+    actual = Chisel.new("").or_list_to_html("* Sushi\n* Barbeque\n* Mexican")
+    assert_equal expected, actual
   end
 end
