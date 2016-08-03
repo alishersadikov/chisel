@@ -13,7 +13,7 @@ class Paragraph
 
   def text_to_html(text)
     text.gsub("**").with_index { |_, index| "<#{'/' if index.odd?}strong>"}
-    .gsub("*").with_index { |dont_care, index| "<#{'/' if index.odd?}em>"}
+    .gsub("*").with_index { |_, index| "<#{'/' if index.odd?}em>"}
     .gsub("&", "&amp;")
   end
 end
