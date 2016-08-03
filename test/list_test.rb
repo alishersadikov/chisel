@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/list'
-require 'pry'
 
 class ListTest < Minitest::Test
   def test_it_converts_unordered_lists

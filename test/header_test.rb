@@ -20,6 +20,4 @@ class HeaderTest < Minitest::Test
   def test_it_converts_only_header_hashes_and_leaves_the_rest
     assert_equal "<h1>abc # def</h1>", header_to_html("# abc # def")
   end
-
-
 end

@@ -1,5 +1,4 @@
 class Paragraph
-
   def initialize(markdown_chunk)
     @markdown_chunk = markdown_chunk
   end

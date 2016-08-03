@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/paragraph'
-require 'pry'
 
 class ParagraphTest < Minitest::Test
   def test_it_indents_the_lines_by_two_spaces
@@ -24,7 +23,7 @@ class ParagraphTest < Minitest::Test
 
   def test_it_converts_both_em_and_strong_tages
     expected = "My <em>emphasized and <strong>stronged</strong> text</em> is awesome"
-    actual = Chisel.new("").text_to_html("My *emphasized and **stronged** text* is awesome")
+    actual = Paragraph.new("").text_to_html("My *emphasized and **stronged** text* is awesome")
     assert_equal expected, actual
   end
 

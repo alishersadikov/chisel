@@ -1,7 +1,6 @@
 class Header
-
-  def initialize(chunk)
-    @chunk = chunk
+  def initialize(markdown_chunk)
+    @markdown_chunk = markdown_chunk
   end
 
   def header_to_html(markdown_chunk)
